@@ -15,7 +15,14 @@ if (!url || !key) {
 }
 const headers = { apikey: key, Authorization: `Bearer ${key}` };
 const get = async (table, select) => { const response = await fetch(`${url}/rest/v1/${table}?status=eq.published&select=${encodeURIComponent(select)}&order=published_at.desc`, { headers }); if (!response.ok) throw new Error(`${table} fetch failed (${response.status})`); return response.json(); };
-const [products, applications, articles] = await Promise.all([get('products','slug,display_name,origin_type,summary,updated_at'), get('applications','slug,name,summary,customer_problem,updated_at'), get('articles','slug,title,excerpt,updated_at')]);
-const published = { generated_at: new Date().toISOString(), source: 'supabase-published-only', products, applications, articles };
-fs.writeFileSync(output, JSON.stringify(published, null, 2));
-fs.writeFileSync(runtimeOutput, JSON.stringify(published, null, 2));
+try {
+  const [products, applications, articles] = await Promise.all([get('products','slug,display_name,origin_type,summary,updated_at'), get('applications','slug,name,summary,customer_problem,updated_at'), get('articles','slug,title,excerpt,updated_at')]);
+  const published = { generated_at: new Date().toISOString(), source: 'supabase-published-only', products, applications, articles };
+  fs.writeFileSync(output, JSON.stringify(published, null, 2));
+  fs.writeFileSync(runtimeOutput, JSON.stringify(published, null, 2));
+} catch (error) {
+  const fallback = { source: 'local-safe-fallback', products: [], applications: [], articles: [] };
+  fs.writeFileSync(output, JSON.stringify(fallback, null, 2));
+  fs.writeFileSync(runtimeOutput, JSON.stringify(fallback, null, 2));
+  console.warn(`Supabase published-content fetch failed; deployed the reviewed local fallback instead. ${error.message}`);
+}
