@@ -1,0 +1,3 @@
+import fs from 'node:fs';import path from 'node:path';
+const index=[['产品','无氟织物防泼水材料｜飞织鞋面与户外面料应用','无氟防泼水 防水整理 疏水 鞋面 面料','/products/fluorine-free-textile-water-repellent/'],['产品','纸杯纸碗用 PHA 水性阻隔材料｜食品包装纸涂层','PHA 纸基包装 阻隔 纸杯纸碗','/products/pha-waterborne-paper-barrier/'],['产品','PVC 低迁移功能增塑剂｜耐热低析出应用','PVC 低迁移 析出 渗出 雾化','/products/pvc-low-migration-plasticizer/'],['应用','飞织鞋面防泼水处理','防泼水 防水整理 疏水','/applications/knitted-upper-water-repellent/'],['文章','面料防泼水方案如何规划验证项目？','面料 防泼水 验证','/knowledge/how-to-verify-water-repellent-fabric/']].map(([type,title,keywords,url])=>({type,title,keywords:keywords.split(' '),url}));
+fs.writeFileSync(path.join(path.resolve(process.cwd(),'../..'),'apps/web/dist/search-index.json'),JSON.stringify(index,null,2));

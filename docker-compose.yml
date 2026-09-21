@@ -1,0 +1,23 @@
+services:
+  api:
+    build: ./apps/api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      VIRTUAL_PORT: ${VIRTUAL_PORT:-8000}
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    expose:
+      - "8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

@@ -1,0 +1,11 @@
+{
+  "name": "sunheart-materials",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web", "packages/*"],
+  "scripts": {
+    "build": "npm run build --workspace=@sunheart/web",
+    "test": "npm run test --workspace=@sunheart/web && python -m unittest discover -s tests -p 'test_*.py'",
+    "check": "npm run typecheck --workspace=@sunheart/web"
+  }
+}
